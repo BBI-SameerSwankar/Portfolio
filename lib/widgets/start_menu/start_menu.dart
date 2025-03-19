@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:portfolio/widgets/window/contact_me/contact_me.dart';
+import 'package:portfolio/widgets/window/education/education.dart';
 
 class StartMenu extends StatelessWidget {
   final Function(String, Widget) onOpenFolder;
@@ -8,6 +10,13 @@ class StartMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+
+     final List<String> skills = const [
+    "html.png", "css.png", "mysql.png",
+    "git.png", "github.png",  "apple.png", "android.png", "swift.png"
+  ];
+
     return Positioned(
       left: 5,
       bottom: 45,
@@ -57,7 +66,7 @@ class StartMenu extends StatelessWidget {
                           _startMenuItem('assets/images/folder_icon.png', 'Education', () {
                             onOpenFolder(
                               "Education",
-                              Center(child: Text("📁 This is the Education Folder")),
+                              Education(),
                             );
                           }),
                           _startMenuItem('assets/images/folder_icon.png', 'Experience', () {
@@ -66,40 +75,86 @@ class StartMenu extends StatelessWidget {
                               Center(child: Text("📁 This is Experience Folder")),
                             );
                           }),
+
+                          
                           _startMenuItem('assets/images/folder_icon.png', 'Contact Me', () {
                             onOpenFolder(
                               "Contact Me",
-                              Center(child: Text("📁 This is Contact Me Folder")),
+                              ContactMe(),
                             );
                           }),
                         ],
                       ),
                     ),
 
-                    // 🔹 Right Panel (Skill Icons Grid)
+
                     Expanded(
-                      child: Container(
-                        color: Colors.white,
-                        padding: const EdgeInsets.all(10),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              "Skills",
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: 'Tahoma',
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            SvgPicture.network(
-                              "https://skillicons.dev/icons?i=html,css,js,c,cpp,mysql,git,github,figma,vscode,androidstudio,firebase,nodejs,express,mongodb",
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+      child: Container(
+        color: Colors.white,
+        padding: const EdgeInsets.all(10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              "Skills",
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Tahoma',
+              ),
+            ),
+            const SizedBox(height: 8),
+
+            // 🛠 GridView for skills
+            Expanded(
+              child: GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 4, // 4 icons per row
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10,
+                  childAspectRatio: 1, // Keep icons square
+                ),
+                itemCount: skills.length,
+                itemBuilder: (context, index) {
+                  return Image.asset(
+                    "assets/images/skills/${skills[index]}",
+                    width: 50,
+                    height: 50,
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    ),
+
+                    // 🔹 Right Panel (Skill Icons Grid)
+                    // Expanded(
+                    //   child: Container(
+                    //     color: Colors.white,
+                    //     padding: const EdgeInsets.all(10),
+                    //     child: Column(
+                    //       crossAxisAlignment: CrossAxisAlignment.start,
+                    //       children: [
+                    //         const Text(
+                    //           "Skills",
+                    //           style: TextStyle(
+                    //             fontSize: 14,
+                    //             fontWeight: FontWeight.bold,
+                    //             fontFamily: 'Tahoma',
+                    //           ),
+                    //         ),
+                    //         const SizedBox(height: 8),
+                    //         SvgPicture.network(
+                    //           "https://skillicons.dev/icons?i=html,css,js,c,cpp,mysql,git,github,figma,vscode,androidstudio,firebase,nodejs,express,mongodb",
+                    //         ),
+                    //       ],
+                    //     ),
+                    //   ),
+                    // ),
+                
+                
                   ],
                 ),
               ),

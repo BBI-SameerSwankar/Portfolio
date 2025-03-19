@@ -43,13 +43,12 @@ class WindowManager extends ChangeNotifier {
     _activeWindow = null;
     notifyListeners();
   }
-void restoreWindow(Window window) {
-  window.isMinimized = false;
-  setActiveWindow(window);
-  notifyListeners();
-}
 
-
+  void restoreWindow(Window window) {
+    window.isMinimized = false;
+    setActiveWindow(window);
+    notifyListeners();
+  }
 
   void closeWindow(Window window) {
     _windows.remove(window);
@@ -61,15 +60,8 @@ void restoreWindow(Window window) {
     notifyListeners();
   }
 
-void setActiveWindow(Window window) {
-  // if (_windows.contains(window)) {
-  //   _windows.remove(window);
-  //   _windows.add(window); // Moves the active window to the last position
-  // }
-
-  _activeWindow = window;
-  notifyListeners();
-}
-
-
+  void setActiveWindow(Window window) {
+    _activeWindow = window;
+    notifyListeners();
+  }
 }
