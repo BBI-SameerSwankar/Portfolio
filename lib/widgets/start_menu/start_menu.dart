@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:portfolio/widgets/start_menu/profile_header.dart';
 
 class StartMenu extends StatelessWidget {
-  const StartMenu({super.key});
+  final Function(String, Widget) onOpenFolder;
+
+  const StartMenu({super.key, required this.onOpenFolder});
 
   @override
   Widget build(BuildContext context) {
@@ -47,10 +48,30 @@ class StartMenu extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          _startMenuItem('assets/images/folder_icon.png', 'My Projects'),
-                          _startMenuItem('assets/images/folder_icon.png', 'Education'),
-                          _startMenuItem('assets/images/folder_icon.png', 'Experience'),
-                          _startMenuItem('assets/images/folder_icon.png', 'Contact me'),
+                          _startMenuItem('assets/images/folder_icon.png', 'My Projects', () {
+                            onOpenFolder(
+                              "My Projects",
+                              Center(child: Text("📁 This is My Projects Folder")),
+                            );
+                          }),
+                          _startMenuItem('assets/images/folder_icon.png', 'Education', () {
+                            onOpenFolder(
+                              "Education",
+                              Center(child: Text("📁 This is the Education Folder")),
+                            );
+                          }),
+                          _startMenuItem('assets/images/folder_icon.png', 'Experience', () {
+                            onOpenFolder(
+                              "Experience",
+                              Center(child: Text("📁 This is Experience Folder")),
+                            );
+                          }),
+                          _startMenuItem('assets/images/folder_icon.png', 'Contact Me', () {
+                            onOpenFolder(
+                              "Contact Me",
+                              Center(child: Text("📁 This is Contact Me Folder")),
+                            );
+                          }),
                         ],
                       ),
                     ),
@@ -72,24 +93,9 @@ class StartMenu extends StatelessWidget {
                               ),
                             ),
                             const SizedBox(height: 8),
-                            // Expanded(
-                            //   child: GridView.builder(
-                            //     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                            //       crossAxisCount: 4, // 4 columns
-                            //       crossAxisSpacing: 10,
-                            //       mainAxisSpacing: 10,
-                            //     ),
-                            //     itemCount: skillIcons.length,
-                            //     itemBuilder: (context, index) {
-                            //       return _buildSkillIcon(skillIcons[index]);
-                            //     },
-                            //   ),
-                            // ),
-                            SvgPicture.network("https://skillicons.dev/icons?i=html,css,js,c,cpp,mysql,git,github,figma,vscode,androidstudio,firebase,nodejs,express,mongodb"),
-                            // Image(
-                            //   image: NetworkImage("https://skillicons.dev/icons?i=html,css,js,c,cpp,mysql,git,github,figma,vscode,androidstudio,firebase,nodejs,express,mongodb"),
-                              
-                            // )
+                            SvgPicture.network(
+                              "https://skillicons.dev/icons?i=html,css,js,c,cpp,mysql,git,github,figma,vscode,androidstudio,firebase,nodejs,express,mongodb",
+                            ),
                           ],
                         ),
                       ),
@@ -111,10 +117,11 @@ class StartMenu extends StatelessWidget {
                   alignment: Alignment.centerRight,
                   child: Padding(
                     padding: const EdgeInsets.only(right: 15),
-                    child: _startMenuItem('assets/images/shutdown.png', 'Shut Down'),
+                    child: _startMenuItem('assets/images/shutdown.png', 'Shut Down', () {}),
                   ),
                 ),
               ),
+           
             ],
           ),
         ),
@@ -123,62 +130,74 @@ class StartMenu extends StatelessWidget {
   }
 
   // 📌 Windows XP Start Menu Items
-  Widget _startMenuItem(String iconPath, String label) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6.0),
+  Widget _startMenuItem(String iconPath, String label, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 6.0),
+        child: Row(
+          children: [
+            Image.asset(iconPath, width: 22, height: 22),
+            const SizedBox(width: 12),
+            Text(label, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class XPProfileHeader extends StatelessWidget {
+  final String title;
+  final String profileImage;
+
+  const XPProfileHeader({
+    super.key,
+    required this.title,
+    required this.profileImage,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 50,
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [Color(0xFF1B58B8), Color(0xFF3A81DD)], // XP Glossy Blue
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(6), // XP-style rounded corners
+        border: Border.all(color: Colors.white, width: 1), // Outer light border
+      ),
       child: Row(
         children: [
-          Image.asset(iconPath, width: 22, height: 22),
-          const SizedBox(width: 12),
-          Text(label, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 6),
+            child: Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.white, width: 2),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(4),
+                child: Image.asset(profileImage, fit: BoxFit.cover),
+              ),
+            ),
+          ),
+          Text(
+            title,
+            style: const TextStyle(
+              fontSize: 18,
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Tahoma',
+            ),
+          ),
         ],
       ),
     );
   }
-
-  // 📌 Skill Icons Grid Item (Using `flutter_svg`)
-  Widget _buildSkillIcon(String url) {
-  return Image.network(
-    "$url&theme=light&format=png", // Forces PNG format
-    width: 40,
-    height: 40,
-    errorBuilder: (context, error, stackTrace) {
-      print(error.toString());
-      return Container(
-        width: 40,
-        height: 40,
-        color: Colors.grey.shade300,
-        child: const Icon(Icons.broken_image, color: Colors.grey),
-      );
-    },
-  );
 }
-
-}
-
-// 🔹 List of Skill Icons from skillicons.dev (SVG format)
-final List<String> skillIcons = [
-  "https://skillicons.dev/icons?i=html",
-  "https://skillicons.dev/icons?i=css",
-  "https://skillicons.dev/icons?i=js",
-  "https://skillicons.dev/icons?i=c",
-  "https://skillicons.dev/icons?i=cpp",
-  "https://skillicons.dev/icons?i=mysql",
-  "https://skillicons.dev/icons?i=git",
-  "https://skillicons.dev/icons?i=github",
-  "https://skillicons.dev/icons?i=figma",
-  "https://skillicons.dev/icons?i=vscode",
-  "https://skillicons.dev/icons?i=androidstudio",
-  "https://skillicons.dev/icons?i=firebase",
-  "https://skillicons.dev/icons?i=nodejs",
-  "https://skillicons.dev/icons?i=express",
-  "https://skillicons.dev/icons?i=mongodb",
-  "https://skillicons.dev/icons?i=flutter",
-  "https://skillicons.dev/icons?i=dart",
-  "https://skillicons.dev/icons?i=postman",
-  "https://skillicons.dev/icons?i=typescript",
-  "https://skillicons.dev/icons?i=react",
-  "https://skillicons.dev/icons?i=redux",
-  "https://skillicons.dev/icons?i=next",
-];
-

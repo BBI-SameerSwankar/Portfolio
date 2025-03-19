@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:portfolio/widgets/desktop/desktop_area.dart';
+import 'package:portfolio/provider/window_manager.dart';
+import 'package:portfolio/widgets/window/projects/projects.dart';
+import 'package:portfolio/widgets/window/widgets/window_frame.dart';
+import 'package:provider/provider.dart';
 import 'package:portfolio/widgets/taskbar/taskbar.dart';
 import 'package:portfolio/widgets/start_menu/start_menu.dart';
 
@@ -21,19 +24,58 @@ class _DesktopState extends State<Desktop> {
 
   @override
   Widget build(BuildContext context) {
+    final windowManager = Provider.of<WindowManager>(context);
+
+      List<Window> nonMinimizedWindows = windowManager.windows.where((w) => !w.isMinimized).toList();
+
+// Sort so the active window appears last (on top)
+nonMinimizedWindows.sort((a, b) => a == windowManager.activeWindow ? 1 : -1);
+
+
     return Stack(
       children: [
-        const DesktopArea(),
+        // 🌄 XP Desktop Background
+        Positioned.fill(
+          child: Container(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/images/windows_bg.webp'),
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+        ),
 
-        // 📌 Show Start Menu Above Everything
-        if (isStartMenuOpen) const StartMenu(),
 
-        // 🟢 Taskbar (Pass Toggle Function)
+
+        // 🗂 Show ONLY non-minimized windows (order maintained)
+     for (var window in nonMinimizedWindows)
+  WindowFrame(
+    key: ValueKey(window.title),
+    title: window.title,
+    child: window.child,
+  ),
+
+        // 🟢 Start Menu
+        if (isStartMenuOpen)
+          StartMenu(
+            onOpenFolder: (title, content) {
+              windowManager.openWindow(title, content);
+              _toggleStartMenu();
+            },
+          ),
+
+        // 🖥 Taskbar (Shows minimized windows)
         Positioned(
           left: 0,
           bottom: 0,
           right: 0,
-          child: Taskbar(onStartPressed: _toggleStartMenu),
+          child: Taskbar(
+            onStartPressed: _toggleStartMenu,
+            windows: windowManager.windows,
+            onRestoreWindow: windowManager.restoreWindow,
+            activeWindow: windowManager.activeWindow,
+          ),
         ),
       ],
     );

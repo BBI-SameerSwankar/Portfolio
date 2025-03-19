@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:portfolio/provider/window_manager.dart';
 
 class WindowFrame extends StatefulWidget {
   final String title;
@@ -13,6 +15,7 @@ class WindowFrame extends StatefulWidget {
 class _WindowFrameState extends State<WindowFrame> {
   Offset position = const Offset(100, 100);
   bool isMaximized = false;
+  bool isMinimized = false; // 🟡 Minimize State
   Size windowSize = const Size(400, 300); // Default window size
 
   void _toggleMaximize() {
@@ -29,26 +32,53 @@ class _WindowFrameState extends State<WindowFrame> {
     });
   }
 
+  void _bringToFront() {
+  final windowManager = Provider.of<WindowManager>(context, listen: false);
+  var matchingWindows = windowManager.windows.where((w) => w.title == widget.title);
+
+  if (matchingWindows.isNotEmpty) {
+    windowManager.setActiveWindow(matchingWindows.first);
+  }
+}
+
+
+
+  void _minimizeWindow() {
+  final windowManager = Provider.of<WindowManager>(context, listen: false);
+  final matchingWindows = windowManager.windows.where((w) => w.title == widget.title);
+  
+  if (matchingWindows.isNotEmpty) {
+    windowManager.minimizeWindow(matchingWindows.first);
+  }
+}
+
+void _closeWindow() {
+  final windowManager = Provider.of<WindowManager>(context, listen: false);
+  final matchingWindows = windowManager.windows.where((w) => w.title == widget.title);
+
+  if (matchingWindows.isNotEmpty) {
+    windowManager.closeWindow(matchingWindows.first);
+  }
+}
+
+
+
   @override
   Widget build(BuildContext context) {
+    if (isMinimized) return const SizedBox.shrink(); // Hide if minimized
+
     return Positioned(
       left: position.dx,
       top: position.dy,
       child: GestureDetector(
-        onPanUpdate: (details) {
-          if (!isMaximized) {
-            setState(() {
-              double newX = position.dx + details.delta.dx;
-              double newY = position.dy + details.delta.dy;
-
-              final screenSize = MediaQuery.of(context).size;
-              newX = newX.clamp(0, screenSize.width - windowSize.width);
-              newY = newY.clamp(0, screenSize.height - windowSize.height - 40);
-
-              position = Offset(newX, newY);
-            });
-          }
-        },
+  onTap: _bringToFront, // 👈 Now clicking brings it to front!
+  onPanUpdate: (details) {
+    if (!isMaximized) {
+      setState(() {
+        position = Offset(position.dx + details.delta.dx, position.dy + details.delta.dy);
+      });
+    }
+  },
         child: ClipRect(
           child: SizedBox(
             width: windowSize.width,
@@ -82,10 +112,6 @@ class _WindowFrameState extends State<WindowFrame> {
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
-                      // borderRadius: BorderRadius.only(
-                      //   topLeft: Radius.circular(5),
-                      //   topRight: Radius.circular(5),
-                      // ),
                     ),
                     child: Row(
                       children: [
@@ -109,12 +135,9 @@ class _WindowFrameState extends State<WindowFrame> {
                         ),
                         const Spacer(),
                         // 🔘 XP-style Buttons (Smaller)
-                        _buildXPButton('assets/images/minimize.png', () {}),
-                        _buildXPButton(
-                           
-                                 'assets/images/maximize.png',
-                            _toggleMaximize),
-                        _buildXPCloseButton(),
+                        _buildXPButton('assets/images/minimize.png', _minimizeWindow), // 🟡 Minimize
+                        _buildXPButton('assets/images/maximize.png', _toggleMaximize), // 🔳 Maximize
+                        _buildXPCloseButton(_closeWindow), // ❌ Close
                       ],
                     ),
                   ),
@@ -135,10 +158,10 @@ class _WindowFrameState extends State<WindowFrame> {
     );
   }
 
-  
-  Widget _buildXPCloseButton() {
+  // ❌ Close Button
+  Widget _buildXPCloseButton(VoidCallback onPressed) {
     return GestureDetector(
-      onTap: () {}, // TODO: Handle Close Action
+      onTap: onPressed,
       child: MouseRegion(
         cursor: SystemMouseCursors.click,
         child: Container(

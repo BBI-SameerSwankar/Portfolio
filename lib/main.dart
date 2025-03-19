@@ -1,8 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:portfolio/provider/window_manager.dart';
 import 'package:portfolio/widgets/desktop/desktop.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MainApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => WindowManager()),
+      ],
+      child: const MainApp(),
+    ),
+  );
 }
 
 class MainApp extends StatelessWidget {
@@ -10,9 +19,9 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Desktop()
+      home: Desktop(),
     );
   }
 }

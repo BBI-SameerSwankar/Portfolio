@@ -23,27 +23,29 @@ class DesktopArea extends StatelessWidget {
           ),
         ),
 
-        // 📂 Windows XP Desktop Icons (BEHIND WINDOWS)
-        DesktopIcons(
-          icons: [
-            {'title': 'My Computer', 'icon': 'assets/images/my_computer_icon.png'},
-            {'title': 'Resume', 'icon': 'assets/images/folder_icon.png'},
-            // {'title': 'Recycle Bin', 'icon': 'assets/images/folder_icon.png'},
-            // {'title': 'Network', 'icon': 'assets/images/folder_icon.png'},
-          ],
-        ),
+       
 
         // 🗂 Window Frame (Windows appear on top of icons)
-        WindowFrame(
-          title: "Projects",
-          child: ProjectsExplorer(
-            projects: [
-              {'title': 'EzShop Website', 'icon': 'assets/images/folder_icon.png'},
-              {'title': 'LibMaster app', 'icon': 'assets/images/folder_icon.png'},
-              {'title': 'Dhruva Website', 'icon': 'assets/images/folder_icon.png'},
-            ],
-          ),
-        ),
+        // WindowFrame(
+        //   title: "Projects",
+        //   child: ProjectsExplorer(
+        //     projects: [
+        //       {'title': 'EzShop Website', 'icon': 'assets/images/folder_icon.png'},
+        //       {'title': 'LibMaster app', 'icon': 'assets/images/folder_icon.png'},
+        //       {'title': 'Dhruva Website', 'icon': 'assets/images/folder_icon.png'},
+        //     ],
+        //   ),
+        // ),
+        // WindowFrame(
+        //   title: "My Exp",
+        //   child: ProjectsExplorer(
+        //     projects: [
+        //       {'title': 'EzShop Website', 'icon': 'assets/images/folder_icon.png'},
+        //       {'title': 'LibMaster app', 'icon': 'assets/images/folder_icon.png'},
+        //       {'title': 'Dhruva Website', 'icon': 'assets/images/folder_icon.png'},
+        //     ],
+        //   ),
+        // ),
       ],
     );
   }
