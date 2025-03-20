@@ -27,7 +27,8 @@ class ContactMe extends StatelessWidget {
             top: 120, // Adjusted to align with Google search bar in the image
             left: 120,
             right: 120, // Centered horizontally
-            child: Material(
+            child: 
+            Material(
               color: Colors.transparent, // Ensure no unwanted backgrounds
               child: Container(
                 padding: const EdgeInsets.all(10),
@@ -75,6 +76,8 @@ class ContactMe extends StatelessWidget {
                 ),
               ),
             ),
+          
+          
           ),
         ],
       ),

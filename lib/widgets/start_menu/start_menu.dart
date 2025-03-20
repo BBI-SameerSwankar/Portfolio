@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:portfolio/widgets/window/contact_me/contact_me.dart';
 import 'package:portfolio/widgets/window/education/education.dart';
+import 'package:portfolio/widgets/window/experience/experience.dart';
 
 class StartMenu extends StatelessWidget {
   final Function(String, Widget) onOpenFolder;
@@ -70,11 +71,12 @@ class StartMenu extends StatelessWidget {
                             );
                           }),
                           _startMenuItem('assets/images/folder_icon.png', 'Experience', () {
-                            onOpenFolder(
-                              "Experience",
-                              Center(child: Text("📁 This is Experience Folder")),
-                            );
-                          }),
+  onOpenFolder(
+    "Experience",
+    Experience(
+    ),
+  );
+}),
 
                           
                           _startMenuItem('assets/images/folder_icon.png', 'Contact Me', () {
